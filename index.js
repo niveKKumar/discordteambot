@@ -1,4 +1,5 @@
-const { Client, MessageEmbed, ReactionEmoji, GuildMember } = require("discord.js");
+const { Client, MessageEmbed, ReactionEmoji, GuildMember, Intents } = require("discord.js");
+const voice = require("@discordjs/voice");
 const config = require("./config");
 const commands = require("./help");
 const { tipps } = require("./tipps");
@@ -12,25 +13,33 @@ let bot = new Client({
       type: "COMPETING",
     },
   },
-
-  intents: ["GUILD_VOICE_STATES"],
+  intents: [
+    Intents.FLAGS.GUILDS,
+    Intents.FLAGS.GUILD_MESSAGES,
+    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+    Intents.FLAGS.GUILD_VOICE_STATES,
+  ],
+  partials: ["MESSAGE", "CHANNEL", "REACTION"],
 });
 bot.destroy();
 require("./server")();
 bot.login(config.token);
-
 const TempChannels = require("discord-temp-channels");
 const tempChannels = new TempChannels(bot);
-console.log("🚀 ~ file: index.js ~ line 24 ~ tempChannels", tempChannels);
 
+// Register a new main channel
+tempChannels.registerChannel("872095389040398409", {
+  childCategory: "873247844889415690",
+  childAutoDeleteIfEmpty: true,
+  childMaxUsers: 3,
+  childFormat: (member, count) => `#${count} | ${member.user.username}'s lounge`,
+});
 try {
   bot.on("voiceStateUpdate", async (oldState, newState) => {
-    tempChannels.registerChannel("872095389040398409", {
-      childCategory: "872095389040398409",
-      childAutoDeleteIfEmpty: true,
-      childMaxUsers: 3,
-      childFormat: (member, count) => `#${count} | ${member.user.username}'s lounge`,
-    });
+    // console.log(newState.channel.parentID);
+    bot.guilds.create("test");
+    // if (newState.channelID == "872095389040398409") {
+    // }
   });
 
   bot.on("guildMemberAdd", (member) => {
@@ -50,7 +59,25 @@ try {
   });
 
   bot.on("ready", () => console.log(`Logged in as ${bot.user.tag}.`));
+  bot.on("messageReactionAdd", async (reaction, user) => {
+    console.log("🚀 ~ file: index.js ~ line 47 ~ bot.on ~ reaction", reaction);
+    // When a reaction is received, check if the structure is partial
+    if (reaction.partial) {
+      // If the message this reaction belongs to was removed, the fetching might result in an API error which should be handled
+      try {
+        await reaction.fetch();
+      } catch (error) {
+        console.error("Something went wrong when fetching the message:", error);
+        // Return as `reaction.message.author` may be undefined/null
+        return;
+      }
+    }
 
+    // Now the message has been cached and is fully available
+    console.log(`${reaction.message.author}'s message "${reaction.message.content}" gained a reaction!`);
+    // The reaction is now also fully available and the properties will be reflected accurately:
+    console.log(`${reaction.count} user(s) have given the same reaction to this message!`);
+  });
   bot.on("message", async (message) => {
     // console.log(message);
     // Check for command
@@ -145,6 +172,8 @@ try {
     }
   });
 } catch (error) {
+  bot.guilds.fetch("871439449278521375", false, true).then((user) => user.member.send("Hey"));
+
   console.log(error.message);
 }
 function welcomeMessage(message) {
