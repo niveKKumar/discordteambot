@@ -51,7 +51,13 @@ try {
 
   bot.on("ready", () => console.log(`Logged in as ${bot.user.tag}.`));
   bot.on("messageReactionAdd", async (reaction, user) => {
-    console.log("🚀 ~ file: index.js ~ line 47 ~ bot.on ~ reaction", reaction);
+    if (reaction.message.id == "873285487643754567") {
+      console.log("Reacted on zuweisung message");
+    }
+    let guild = bot.guilds.cache.roles.forEach((role) => {
+      console.log(role);
+    });
+    console.log("🚀 ~ file: index.js ~ line 58 ~ bot.on ~ guild", guild);
     // When a reaction is received, check if the structure is partial
     if (reaction.partial) {
       // If the message this reaction belongs to was removed, the fetching might result in an API error which should be handled
@@ -65,7 +71,7 @@ try {
     }
 
     // Now the message has been cached and is fully available
-    console.log(`${reaction.message.author}'s message "${reaction.message.content}" gained a reaction!`);
+    console.log(`${reaction.message.author.username}'s message "${reaction.message.content}" gained a reaction!`);
     // The reaction is now also fully available and the properties will be reflected accurately:
     console.log(`${reaction.count} user(s) have given the same reaction to this message!`);
   });
