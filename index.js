@@ -21,14 +21,17 @@ bot.login(config.token);
 
 const TempChannels = require("discord-temp-channels");
 const tempChannels = new TempChannels(bot);
-tempChannels.registerChannel("872095389040398409", {
-  childCategory: "872095389040398407",
-  childAutoDeleteIfEmpty: true,
-  childMaxUsers: 3,
-  childFormat: (member, count) => `#${count} | ${member.user.username}'s lounge`,
-});
+console.log("🚀 ~ file: index.js ~ line 24 ~ tempChannels", tempChannels);
+
 try {
-  bot.on("voiceStateUpdate", async (oldState, newState) => {});
+  bot.on("voiceStateUpdate", async (oldState, newState) => {
+    tempChannels.registerChannel("872095389040398409", {
+      childCategory: "872095389040398409",
+      childAutoDeleteIfEmpty: true,
+      childMaxUsers: 3,
+      childFormat: (member, count) => `#${count} | ${member.user.username}'s lounge`,
+    });
+  });
 
   bot.on("guildMemberAdd", (member) => {
     bot.channels.cache.get("872367130153218078").send(welcomeMessage(member));
