@@ -27,8 +27,11 @@ try {
     if (count == 1) {
       var role = member.guild.roles.cache.find((role) => role.name == "Nicht zugewiesen");
       member.roles.add(role);
+    } else {
+      var role = member.guild.roles.cache.find((role) => role.name == "Nicht zugewiesen");
+      member.roles.remove(role);
     }
-    bot.channels.cache.get("872095389040398408").send("Anzahl der Rollen ", count);
+    bot.channels.cache.get("872095389040398408").send(member.displayName + " Anzahl der Rollen " + count);
   });
 
   bot.on("ready", () => console.log(`Logged in as ${bot.user.tag}.`));
