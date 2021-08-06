@@ -1,5 +1,6 @@
-const { Client, MessageEmbed, ReactionEmoji, GuildMember, Intents } = require("discord.js");
+const { Client, MessageEmbed, Intents } = require("discord.js");
 const voice = require("@discordjs/voice");
+
 const config = require("./config");
 const commands = require("./help");
 const { tipps } = require("./tipps");
@@ -24,20 +25,10 @@ let bot = new Client({
 bot.destroy();
 require("./server")();
 bot.login(config.token);
-const TempChannels = require("discord-temp-channels");
-const tempChannels = new TempChannels(bot);
 
-// Register a new main channel
-tempChannels.registerChannel("872095389040398409", {
-  childCategory: "873247844889415690",
-  childAutoDeleteIfEmpty: true,
-  childMaxUsers: 3,
-  childFormat: (member, count) => `#${count} | ${member.user.username}'s lounge`,
-});
 try {
   bot.on("voiceStateUpdate", async (oldState, newState) => {
     // console.log(newState.channel.parentID);
-    bot.guilds.create("test");
     // if (newState.channelID == "872095389040398409") {
     // }
   });
@@ -166,8 +157,10 @@ try {
           break;
       }
     } else {
+      if (message.author.bot) return false;
       if (message.channel.type == "dm") {
         message.react("♥️");
+        message.reply(message.content);
       }
     }
   });
