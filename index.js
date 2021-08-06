@@ -18,6 +18,10 @@ require("./server")();
 bot.login(config.token);
 
 try {
+  client.on("voiceStateUpdate", async (oldState, newState) => {
+    console.log("VOICE CHANGES");
+  });
+
   bot.on("guildMemberAdd", (member) => {
     bot.channels.cache.get("872367130153218078").send(welcomeMessage(member));
   });
@@ -130,7 +134,10 @@ try {
     }
   });
 } catch (error) {
-  message.reply(error.message);
+  let user = bot.users.fetch("871439449278521375").then((user) => {
+    console.log("🚀 ~ file: index.js ~ line 138 ~ user", user);
+    user.send("HALLO");
+  });
 }
 function welcomeMessage(message) {
   let user;
