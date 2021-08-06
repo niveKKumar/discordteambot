@@ -12,15 +12,23 @@ let bot = new Client({
       type: "COMPETING",
     },
   },
+
+  intents: ["GUILD_VOICE_STATES"],
 });
 bot.destroy();
 require("./server")();
 bot.login(config.token);
 
+const TempChannels = require("discord-temp-channels");
+const tempChannels = new TempChannels(bot);
+tempChannels.registerChannel("872095389040398409", {
+  childCategory: "872095389040398407",
+  childAutoDeleteIfEmpty: true,
+  childMaxUsers: 3,
+  childFormat: (member, count) => `#${count} | ${member.user.username}'s lounge`,
+});
 try {
-  client.on("voiceStateUpdate", async (oldState, newState) => {
-    console.log("VOICE CHANGES");
-  });
+  bot.on("voiceStateUpdate", async (oldState, newState) => {});
 
   bot.on("guildMemberAdd", (member) => {
     bot.channels.cache.get("872367130153218078").send(welcomeMessage(member));
@@ -134,10 +142,7 @@ try {
     }
   });
 } catch (error) {
-  let user = bot.users.fetch("871439449278521375").then((user) => {
-    console.log("🚀 ~ file: index.js ~ line 138 ~ user", user);
-    user.send("HALLO");
-  });
+  console.log(error.message);
 }
 function welcomeMessage(message) {
   let user;
