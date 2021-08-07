@@ -1,4 +1,4 @@
-const { Client, MessageEmbed, Intents } = require("discord.js");
+const { Client, MessageEmbed, Intents, MessageActionRow, MessageButton } = require("discord.js");
 const voice = require("@discordjs/voice");
 
 const config = require("./config");
@@ -7,20 +7,7 @@ const { tipps } = require("./tipps");
 const { buttons } = require("./pronomenpicker");
 
 let bot = new Client({
-  // fetchAllMembers: true,
-  presence: {
-    status: "online",
-    activity: {
-      name: `${config.prefix}help`,
-      type: "COMPETING",
-    },
-  },
-  intents: [
-    Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_MESSAGES,
-    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-    Intents.FLAGS.GUILD_VOICE_STATES,
-  ],
+  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS],
   partials: ["MESSAGE", "CHANNEL", "REACTION"],
 });
 bot.destroy();
@@ -76,7 +63,8 @@ try {
     // The reaction is now also fully available and the properties will be reflected accurately:
     console.log(`${reaction.count} user(s) have given the same reaction to this message!`);
   });
-  bot.on("message", async (message) => {
+  bot.on("messageCreate", async (message) => {
+    console.log("🚀 ~ file: index.js ~ line 80 ~ bot.on ~ message", message);
     // console.log(message);
     // Check for command
 
@@ -87,7 +75,10 @@ try {
 
       switch (command) {
         case "pronomen":
-          message.reply({ content: "Huhu", components: buttons });
+          message.reply({
+            content: "Huhu",
+            components: new MessageActionRow().addComponents(new MessageButton().addLabel("test")),
+          });
           break;
         case "meineInfos":
           getUserInfoAsCard(message);
@@ -176,7 +167,9 @@ try {
   });
 } catch (error) {
   bot.guilds.fetch("871439449278521375", false, true).then((user) => user.member.send("Hey"));
-
+  if (message) {
+    message.reply(error.message);
+  }
   console.log(error.message);
 }
 function welcomeMessage(message) {

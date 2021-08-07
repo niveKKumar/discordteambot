@@ -9,7 +9,7 @@ pronomen.map((pronom, index) => {
     buttons.push(row);
     row = new MessageActionRow();
   }
-  row.addComponents(new MessageButton().setCustomId(pronom.name).setLabel(pronom.name).setStyle("RANDOM"));
+  row.addComponents(new MessageButton().setCustomId("pronom.name").setLabel("pronom.name").setStyle("RANDOM"));
 });
 
 module.exports = { buttons };

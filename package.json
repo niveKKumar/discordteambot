@@ -1,11 +1,8 @@
 {
-  "name": "DiscordBot",
   "main": "index.js",
   "dependencies": {
     "@discordjs/voice": "^0.5.5",
-    "discord-temp-channels": "^3.0.0",
-    "discord.js": "^12.5.3",
-    "discord.js-temporary-channel": "^2.0.2",
+    "discord.js": "^13.0.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "nodemon": "^2.0.12"
