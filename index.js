@@ -4,6 +4,7 @@ const voice = require("@discordjs/voice");
 const config = require("./config");
 const commands = require("./help");
 const { tipps } = require("./tipps");
+const { buttons } = require("./pronomenpicker");
 
 let bot = new Client({
   // fetchAllMembers: true,
@@ -85,6 +86,9 @@ try {
       console.log(command);
 
       switch (command) {
+        case "pronomen":
+          message.reply({ content: "Huhu", components: buttons });
+          break;
         case "meineInfos":
           getUserInfoAsCard(message);
           break;
